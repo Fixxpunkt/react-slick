@@ -101,3 +101,44 @@ export class NextArrow extends React.PureComponent {
     return nextArrow;
   }
 }
+
+export class FullscreenArrow extends React.Component {
+  clickHandler(options, e) {
+    if (e) {
+      e.preventDefault();
+    }
+    this.props.clickHandler(options, e);
+  }
+  render() {
+    var fullscreenClasses = {"slick-arrow": true, "slick-fullscreen": true};
+    var fullscreenHandler = this.clickHandler.bind(this, {message: "fullscreen"});
+
+
+    var fullscreenArrowProps = {
+      key: "2",
+      "data-role": "none",
+      className: classnames(fullscreenClasses),
+      style: {display: "block"},
+      onClick: fullscreenHandler
+    };
+    var customProps = {
+      currentSlide: this.props.currentSlide,
+      slideCount: this.props.slideCount
+    };
+    let fullscreenArrow;
+    if (this.props.fullscreenArrow) {
+      fullscreenArrow = React.cloneElement(this.props.fullscreenArrow, {
+        ...fullscreenArrowProps,
+        ...customProps
+      });
+    } else {
+      fullscreenArrow = (
+        <button key="2" type="button" {...fullscreenArrowProps}>
+          {" "}
+          X
+        </button>
+      );
+    }
+    return fullscreenArrow;
+  }
+}

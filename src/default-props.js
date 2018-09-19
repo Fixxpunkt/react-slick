@@ -50,7 +50,11 @@ var defaultProps = {
   useTransform: true,
   variableWidth: false,
   vertical: false,
-  waitForAnimate: true
+  waitForAnimate: true,
+  currentDirection: null,
+  fullscreen: false,
+  fullscreenPreload: false,
+  fullscreenArrow: null
 };
 
 export default defaultProps;

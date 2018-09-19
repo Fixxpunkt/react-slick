@@ -77,6 +77,12 @@ export default class Slider extends React.Component {
 
   slickNext = () => this.innerSlider.slickNext();
 
+  getDirection = () =>  this.innerSlider.getDirection();
+
+  isAnimated = () => this.innerSlider.isAnimated();
+
+  slickFullscreen = () => this.innerSlider.slickFullscreen();
+
   slickGoTo = (slide, dontAnimate = false) =>
     this.innerSlider.slickGoTo(slide, dontAnimate);
 

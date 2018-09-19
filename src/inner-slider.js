@@ -25,7 +25,7 @@ import {
 
 import { Track } from "./track";
 import { Dots } from "./dots";
-import { PrevArrow, NextArrow } from "./arrows";
+import { PrevArrow, NextArrow, FullscreenArrow } from "./arrows";
 import ResizeObserver from "resize-observer-polyfill";
 
 export class InnerSlider extends React.Component {
@@ -36,6 +36,7 @@ export class InnerSlider extends React.Component {
     this.state = {
       ...initialState,
       currentSlide: this.props.initialSlide,
+      fullscreen: this.props.fullscreen,
       slideCount: React.Children.count(this.props.children)
     };
     this.callbackTimers = [];
@@ -407,12 +408,36 @@ export class InnerSlider extends React.Component {
   };
   changeSlide = (options, dontAnimate = false) => {
     const spec = { ...this.props, ...this.state };
+
     let targetSlide = changeSlide(spec, options);
+
     if (targetSlide !== 0 && !targetSlide) return;
     if (dontAnimate === true) {
       this.slideHandler(targetSlide, dontAnimate);
     } else {
       this.slideHandler(targetSlide);
+    }
+
+    if (options.message !== null) {
+      if (options.message === "next") {
+        setTimeout(() => {
+          this.setState({ currentDirection: 0 });
+        }, 0);
+      }
+      else if (options.message === "previous") {
+        setTimeout(() => {
+          this.setState({ currentDirection: 1 });
+        }, 0);
+      }
+      else if (options.message === "fullscreen") {
+         let callback = () => {
+           this.setState({ fullscreenPreload: false });
+           delete this.fullscreenCallback;
+         };
+         this.setState({ fullscreen: !this.state.fullscreen, fullscreenPreload: true }, function () {
+            this.fullscreenCallback = setTimeout(callback, 500);
+         });
+      }
     }
   };
   clickHandler = e => {
@@ -491,6 +516,18 @@ export class InnerSlider extends React.Component {
     this.callbackTimers.push(
       setTimeout(() => this.changeSlide({ message: "next" }), 0)
     );
+  };
+  slickFullscreen = () => {
+    this.callbackTimers.push(
+      setTimeout(() => this.changeSlide({ message: "fullscreen" }), 0)
+    );
+
+  };
+  getDirection = () => {
+    return this.state.currentDirection;
+  };
+  isAnimated = () => {
+    return this.state.animating;
   };
   slickGoTo = (slide, dontAnimate = false) => {
     slide = Number(slide);
@@ -588,7 +625,8 @@ export class InnerSlider extends React.Component {
   render = () => {
     var className = classnames("slick-slider", this.props.className, {
       "slick-vertical": this.props.vertical,
-      "slick-initialized": true
+      "slick-initialized": true,
+      "full-preload": this.state.fullscreenPreload
     });
     let spec = { ...this.props, ...this.state };
     let trackProps = extractObject(spec, [
@@ -651,7 +689,7 @@ export class InnerSlider extends React.Component {
       dots = <Dots {...dotProps} />;
     }
 
-    var prevArrow, nextArrow;
+    var prevArrow, nextArrow, fullscreenArrow;
     let arrowProps = extractObject(spec, [
       "infinite",
       "centerMode",
@@ -659,7 +697,9 @@ export class InnerSlider extends React.Component {
       "slideCount",
       "slidesToShow",
       "prevArrow",
-      "nextArrow"
+      "nextArrow",
+      "fullscreen",
+      "fullscreenArrow"
     ]);
     arrowProps.clickHandler = this.changeSlide;
 
@@ -667,6 +707,10 @@ export class InnerSlider extends React.Component {
       prevArrow = <PrevArrow {...arrowProps} />;
       nextArrow = <NextArrow {...arrowProps} />;
     }
+
+    if (this.props.fullscreenArrow !== null) {
+     fullscreenArrow = <FullscreenArrow {...arrowProps} />;
+   }
 
     var verticalHeightStyle = null;
 
@@ -728,6 +772,7 @@ export class InnerSlider extends React.Component {
         </div>
         {!this.props.unslick ? nextArrow : ""}
         {!this.props.unslick ? dots : ""}
+        {!this.props.unslick ? fullscreenArrow : ""}
       </div>
     );
   };

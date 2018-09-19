@@ -267,6 +267,8 @@ export const changeSlide = (spec, options) => {
     if (lazyLoad && !infinite) {
       targetSlide = (currentSlide + slidesToScroll) % slideCount + indexOffset;
     }
+  } else if (options.message === "fullscreen") {
+    targetSlide = currentSlide;
   } else if (options.message === "dots") {
     // Click on dots
     targetSlide = options.index * options.slidesToScroll;

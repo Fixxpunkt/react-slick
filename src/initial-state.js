@@ -7,6 +7,7 @@ const initialState = {
   direction: 1,
   dragging: false,
   edgeDragged: false,
+  fullscreen: false,
   initialized: false,
   lazyLoadedList: [],
   listHeight: null,

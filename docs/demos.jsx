@@ -20,6 +20,7 @@ import Rtl from '../examples/Rtl'
 import VariableWidth from '../examples/VariableWidth'
 import AdaptiveHeight from '../examples/AdaptiveHeight'
 import LazyLoad from '../examples/LazyLoad'
+import LazyLoadFullscreen from '../examples/LazyLoadFullscreen'
 import Fade from '../examples/Fade'
 import SlickGoTo from '../examples/SlickGoTo'
 import CustomArrows from '../examples/CustomArrows'
@@ -37,6 +38,7 @@ export default class App extends React.Component {
   render() {
     return (
       <div className='content'>
+        <LazyLoadFullscreen />
         <SimpleSlider />
         <MultipleItems />
         <MultipleRows />
