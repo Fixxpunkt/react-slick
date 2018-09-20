@@ -339,7 +339,8 @@ export const swipeMove = (e, spec) => {
     touchObject,
     swipeEvent,
     listHeight,
-    listWidth
+    listWidth,
+    fullscreen
   } = spec;
   if (scrolling) return;
   if (animating) return e.preventDefault();
@@ -355,7 +356,7 @@ export const swipeMove = (e, spec) => {
   let verticalSwipeLength = Math.round(
     Math.sqrt(Math.pow(touchObject.curY - touchObject.startY, 2))
   );
-  if (!verticalSwiping && !swiping && verticalSwipeLength > 10) {
+  if (!fullscreen && !verticalSwiping && !swiping && verticalSwipeLength > 10) {
     return { scrolling: true };
   }
   if (verticalSwiping) touchObject.swipeLength = verticalSwipeLength;
